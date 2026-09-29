@@ -1,0 +1,55 @@
+{
+  "name": "insuredmine-backend-engine",
+  "version": "0.0.1",
+  "description": "Express + Mongoose REST API server",
+  "main": "src/index.js",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "nodemon src",
+    "start": "node src",
+    "test": "jest",
+    "lint": "eslint src test",
+    "lint:fix": "eslint src test --no-error-on-unmatched-pattern --fix",
+    "prepare": "husky"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "3.0.3",
+    "cors": "2.8.6",
+    "csv-parser": "3.2.1",
+    "dotenv": "18.0.4",
+    "exceljs": "4.4.0",
+    "express": "5.2.1",
+    "helmet": "8.3.0",
+    "http-errors": "2.0.1",
+    "http-status": "2.1.0",
+    "jsonwebtoken": "9.0.3",
+    "mongoose": "9.10.2",
+    "multer": "2.4.0",
+    "winston": "3.19.0"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "5.10.0",
+    "eslint": "9.39.5",
+    "eslint-config-airbnb-extended": "3.2.0",
+    "eslint-plugin-check-file": "3.3.2",
+    "eslint-plugin-import-x": "4.17.1",
+    "eslint-plugin-n": "18.4.0",
+    "eslint-plugin-promise": "7.3.0",
+    "eslint-plugin-security": "4.1.0",
+    "globals": "17.12.0",
+    "husky": "9.1.7",
+    "jest": "30.5.2",
+    "nodemon": "3.1.14",
+    "supertest": "7.3.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/test/**/*.test.js"
+    ]
+  }
+}
