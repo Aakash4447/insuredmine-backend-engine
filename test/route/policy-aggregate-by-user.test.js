@@ -9,7 +9,7 @@ jest.mock('../../src/models', () => require('../helpers/mock-models')); // eslin
 jest.mock('../../src/utils/logger', () => ({ error: jest.fn(), info: jest.fn() }));
 
 const app = buildApp();
-const admin = fakeUser({ id: 'a1', role: 'ADMIN', email: 'admin@example.com' });
+const admin = fakeUser({ id: 'a1', roles: ['ADMIN'], email: 'admin@example.com' });
 const member = fakeUser({ id: 'u2', email: 'ann@example.com' });
 const users = [{
   userId: 'h1',

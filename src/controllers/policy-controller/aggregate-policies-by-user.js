@@ -10,7 +10,7 @@ const aggregatePoliciesByUserController = async (req, res, next) => {
     const pagination = getPagination(req.query);
 
     // ADMIN sees every holder, other users only the holder registered with their own email
-    const email = req.user.role === 'ADMIN' ? undefined : req.user.email;
+    const email = req.user.roles.includes('ADMIN') ? undefined : req.user.email;
     const { users, total } = await aggregatePoliciesByUser({ email, ...pagination });
     return res.status(status.OK).json(generateResponse('POLICIES_AGGREGATED', { users, pagination: buildPagination(pagination, total) }));
   } catch (error) {

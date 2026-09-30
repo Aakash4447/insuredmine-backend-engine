@@ -14,7 +14,7 @@ const searchPoliciesController = async (req, res, next) => {
     const pagination = getPagination(req.query);
 
     // ADMIN searches every holder, other users only the holder registered with their own email
-    const email = req.user.role === 'ADMIN' ? undefined : req.user.email;
+    const email = req.user.roles.includes('ADMIN') ? undefined : req.user.email;
     const { policies, total } = await searchPolicies({ username, email, ...pagination });
     return res.status(status.OK).json(generateResponse('POLICIES_FETCHED', { policies, pagination: buildPagination(pagination, total) }));
   } catch (error) {

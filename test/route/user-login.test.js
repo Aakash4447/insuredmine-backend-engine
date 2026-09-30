@@ -18,7 +18,7 @@ const dbUser = () => ({
   id: 'u1',
   password: hash,
   toJSON: () => ({
-    id: 'u1', name: 'Test', email: 'test@example.com', role: 'USER', password: 'hash',
+    id: 'u1', name: 'Test', email: 'test@example.com', roles: ['USER'], password: 'hash',
   }),
 });
 
@@ -33,7 +33,7 @@ describe('POST /user/login', () => {
     expect(res.status).toBe(200);
     expect(res.body.message).toBe('Logged in successfully');
     expect(res.body.data.user).toEqual({
-      id: 'u1', name: 'Test', email: 'test@example.com', role: 'USER',
+      id: 'u1', name: 'Test', email: 'test@example.com', roles: ['USER'],
     });
     const access = jwt.verify(res.body.data.accessToken, process.env.JWT_SECRET);
     const refresh = jwt.verify(res.body.data.refreshToken, process.env.JWT_SECRET);

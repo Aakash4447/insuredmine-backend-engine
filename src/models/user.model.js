@@ -11,7 +11,7 @@ module.exports = mongoose => {
       type: String, required: true, unique: true, lowercase: true, trim: true,
     },
     password: { type: String, required: true, select: false },
-    role: { type: String, enum: ['ADMIN', 'USER'], default: 'USER' },
+    roles: { type: [String], enum: ['ADMIN', 'USER'], default: ['USER'] },
   }, { timestamps: true, collection: 'users' });
 
   userSchema.plugin(softDelete);

@@ -41,7 +41,7 @@ npm run lint          # eslint src test
 
 `src/models/index.js` connects with `mongoose.connect(process.env.MONGODB_URI)` at startup and the server exits if the connection fails. There are no migrations: Mongoose creates collections and indexes on first use. On boot, two users are seeded if missing:
 
-| Email | Password | Role |
+| Email | Password | Roles |
 | --- | --- | --- |
 | `admin@example.com` | `Admin@123` | ADMIN |
 | `user@example.com` | `User@123` | USER |
@@ -81,7 +81,7 @@ curl -X POST http://localhost:3000/user/login \
   "success": true,
   "statusCode": 200,
   "message": "Logged in successfully",
-  "data": { "user": { "id": "...", "name": "Admin User", "email": "admin@example.com", "role": "ADMIN" }, "accessToken": "<jwt>", "refreshToken": "<jwt>" }
+  "data": { "user": { "id": "...", "name": "Admin User", "email": "admin@example.com", "roles": ["ADMIN"] }, "accessToken": "<jwt>", "refreshToken": "<jwt>" }
 }
 ```
 

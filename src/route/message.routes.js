@@ -5,6 +5,6 @@ const { auth } = require('../middlewares');
 
 const router = express.Router();
 
-router.post('/schedule', auth, messageController.scheduleMessage);
+router.post('/schedule', auth(), messageController.scheduleMessage);
 
 module.exports = router;

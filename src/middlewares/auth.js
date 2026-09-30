@@ -6,7 +6,8 @@ const { decodeToken } = require('../utils/generate-token');
 const getMessage = require('../utils/get-message');
 const logger = require('../utils/logger');
 
-const auth = async (req, res, next) => {
+// roles is optional: when given, the user must also have at least one of them, otherwise only authentication is checked
+const auth = (roles = []) => async (req, res, next) => {
   try {
     const { headers: { authorization } } = req;
     if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -22,6 +23,8 @@ const auth = async (req, res, next) => {
 
     const user = await models.user.findOne({ _id: String(decoded.userId) });
     if (!user) throw createHttpError(status.UNAUTHORIZED, getMessage('USER_NOT_FOUND'));
+
+    if (roles.length && !roles.some(role => (user.roles || []).includes(role))) throw createHttpError(status.FORBIDDEN, getMessage('FORBIDDEN'));
 
     req.user = user;
     return next();

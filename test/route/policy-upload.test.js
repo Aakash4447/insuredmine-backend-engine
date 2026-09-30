@@ -13,7 +13,7 @@ jest.mock('../../src/utils/logger', () => ({ error: jest.fn(), info: jest.fn() }
 jest.mock('../../src/utils/run-upload-worker', () => jest.fn());
 
 const app = buildApp();
-const admin = fakeUser({ id: 'a1', role: 'ADMIN' });
+const admin = fakeUser({ id: 'a1', roles: ['ADMIN'] });
 const stats = { totalRows: 2, recordsImported: 2, recordsSkipped: 0 };
 const csv = Buffer.from('policy_number,email\nP1,a@x.com\n');
 

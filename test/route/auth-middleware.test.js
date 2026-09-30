@@ -73,9 +73,53 @@ describe.each(['/user/me', '/user/list'])('auth middleware on GET %s', path => {
   });
 
   it('passes through for a valid token', async () => {
-    models.user.findOne.mockResolvedValue(fakeUser({ role: 'ADMIN' }));
+    models.user.findOne.mockResolvedValue(fakeUser({ roles: ['ADMIN'] }));
     models.user.find.mockReturnValue(mockQuery([]));
     const res = await get(bearer('u1'));
     expect(res.status).toBe(200);
+  });
+});
+
+describe('auth middleware role check on POST /policies/upload (ADMIN only)', () => {
+  beforeEach(() => jest.resetAllMocks());
+
+  const post = () => request(app).post('/policies/upload').set('Authorization', bearer('u1'));
+
+  it('returns 403 when the user role is not allowed', async () => {
+    models.user.findOne.mockResolvedValue(fakeUser({ roles: ['USER'] }));
+    const res = await post();
+    expect(res.status).toBe(403);
+    expect(res.body).toMatchObject({ success: false, message: 'You do not have permission to perform this action' });
+  });
+
+  it('lets an allowed role through to the next middleware', async () => {
+    models.user.findOne.mockResolvedValue(fakeUser({ roles: ['ADMIN'] }));
+    const res = await post();
+    expect(res.status).not.toBe(403);
+    expect(res.status).not.toBe(401);
+  });
+
+  it('lets a user with several roles through when any of them is allowed', async () => {
+    models.user.findOne.mockResolvedValue(fakeUser({ roles: ['USER', 'ADMIN'] }));
+    const res = await post();
+    expect(res.status).not.toBe(403);
+    expect(res.status).not.toBe(401);
+  });
+
+  it('returns 403 when the user only has the USER role in a roles array', async () => {
+    models.user.findOne.mockResolvedValue(fakeUser({ roles: ['USER'] }));
+    const res = await post();
+    expect(res.status).toBe(403);
+  });
+
+  it('returns 403 when the user has no roles', async () => {
+    models.user.findOne.mockResolvedValue(fakeUser({ roles: [] }));
+    const res = await post();
+    expect(res.status).toBe(403);
+  });
+
+  it('still returns 401 before checking roles when the token is missing', async () => {
+    const res = await request(app).post('/policies/upload');
+    expect(res.status).toBe(401);
   });
 });
