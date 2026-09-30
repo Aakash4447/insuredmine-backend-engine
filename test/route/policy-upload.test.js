@@ -76,10 +76,10 @@ describe('POST /policies/upload', () => {
     expect(runUploadWorker).not.toHaveBeenCalled();
   });
 
-  it('returns 403 for a non-ADMIN user before the worker runs', async () => {
+  it('returns 401 for a non-ADMIN user before the worker runs', async () => {
     models.user.findOne.mockResolvedValue(fakeUser({ id: 'u2' }));
     const res = await upload(bearer('u2')).attach('file', csv, 'policies.csv');
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(401);
     expect(res.body.message).toBe('You do not have permission to perform this action');
     expect(runUploadWorker).not.toHaveBeenCalled();
   });

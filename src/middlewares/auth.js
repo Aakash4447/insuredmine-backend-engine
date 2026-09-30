@@ -24,7 +24,9 @@ const auth = (roles = []) => async (req, res, next) => {
     const user = await models.user.findOne({ _id: String(decoded.userId) });
     if (!user) throw createHttpError(status.UNAUTHORIZED, getMessage('USER_NOT_FOUND'));
 
-    if (roles.length && !roles.some(role => (user.roles || []).includes(role))) throw createHttpError(status.FORBIDDEN, getMessage('FORBIDDEN'));
+    if (roles.length && !roles.some(role => (user.roles || []).includes(role))) {
+      throw createHttpError(status.UNAUTHORIZED, getMessage('UNAUTHORIZED'));
+    }
 
     req.user = user;
     return next();

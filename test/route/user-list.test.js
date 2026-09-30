@@ -25,10 +25,10 @@ describe('GET /user/list', () => {
     expect(query.sort).toHaveBeenCalledWith({ createdAt: -1 });
   });
 
-  it('returns 403 for a non-ADMIN user without querying users', async () => {
+  it('returns 401 for a non-ADMIN user without querying users', async () => {
     models.user.findOne.mockResolvedValue(users[1]);
     const res = await request(app).get('/user/list').set('Authorization', bearer('u2'));
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(401);
     expect(res.body.message).toBe('You do not have permission to perform this action');
     expect(models.user.find).not.toHaveBeenCalled();
   });

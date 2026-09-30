@@ -17,7 +17,7 @@ const messages = {
   USER_NOT_FOUND: 'User not found',
   EMAIL_ALREADY_EXISTS: 'Email already exists',
   INVALID_CREDENTIALS: 'Invalid email or password',
-  FORBIDDEN: 'You do not have permission to perform this action',
+  UNAUTHORIZED: 'You do not have permission to perform this action',
   USER_REGISTERED: 'User registered successfully',
   LOGIN_SUCCESS: 'Logged in successfully',
   USER_FETCHED: 'User fetched successfully',

@@ -21,7 +21,7 @@ describe('generateResponse', () => {
   });
 
   it('marks status >= 400 as unsuccessful', () => {
-    expect(generateResponse('FORBIDDEN', [], 403)).toMatchObject({ success: false, statusCode: 403 });
+    expect(generateResponse('UNAUTHORIZED', [], 403)).toMatchObject({ success: false, statusCode: 403 });
   });
 });
 

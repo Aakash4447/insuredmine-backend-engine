@@ -68,7 +68,7 @@ Errors use the same shape with `success: false`, a 4xx or 5xx `statusCode`, and 
 
 ### Authentication
 
-Every endpoint below needs `Authorization: Bearer <accessToken>`. Log in first:
+Every endpoint below except register and login needs `Authorization: Bearer <accessToken>`. Log in first:
 
 ```bash
 curl -X POST http://localhost:3000/user/login \
@@ -86,6 +86,29 @@ curl -X POST http://localhost:3000/user/login \
 ```
 
 Use the token in the examples: `export TOKEN=<accessToken>`. In Postman, set the request Authorization type to Bearer Token.
+
+Access is role based. `auth()` only checks the token, and `auth(['ADMIN'])` also requires the user to have at least one of the listed roles in their `roles` array (`ADMIN` or `USER`, default `["USER"]`). A user without a required role gets `401` with `You do not have permission to perform this action`.
+
+### Task routes at a glance
+
+| Task | Method and path | Auth | Details |
+| --- | --- | --- | --- |
+| 1.1 Upload XLSX/CSV (worker thread) | `POST /policies/upload` | ADMIN | [section 1](#1-file-upload-post-policiesupload) |
+| 1.2 Search policies by username | `GET /policies/search?username=` | any user | [section 2](#2-search-by-username-get-policiessearch) |
+| 1.3 Policies aggregated by user | `GET /policies/aggregate-by-user` | any user | [section 3](#3-aggregate-by-user-get-policiesaggregate-by-user) |
+| 2.1 CPU watchdog (restart at 70%) | none, runs as a background monitor | n/a | [CPU monitoring](#cpu-monitoring-and-restart) |
+| 2.2 Schedule a message | `POST /messages/schedule` | any user | [section 4](#4-schedule-a-message-post-messagesschedule) |
+
+A Postman collection with all of these requests is in `postman/insuredmine.postman_collection.json`. Run Login first; it saves the token into the `token` collection variable.
+
+### User endpoints
+
+| Method and path | Auth | Description |
+| --- | --- | --- |
+| `POST /user/register` | none | Body `name`, `email`, `password`. Returns `201` with the new user (`roles` defaults to `["USER"]`). `400` on missing or invalid fields, `409` if the email exists. |
+| `POST /user/login` | none | Body `email`, `password`. Returns the user, `accessToken` and `refreshToken`. `401` on wrong credentials. |
+| `GET /user/me` | any user | Returns the logged-in user. |
+| `GET /user/list` | ADMIN | Returns all users. |
 
 ### 1. File upload: `POST /policies/upload`
 
@@ -123,7 +146,7 @@ Response `200`:
 }
 ```
 
-Re-uploading the same file updates existing records instead of duplicating them. Errors: `400` (no file, wrong type, too large), `401`, `403` (not ADMIN).
+Re-uploading the same file updates existing records instead of duplicating them. Errors: `400` (no file, wrong type, too large), `401` (missing or invalid token, or not ADMIN).
 
 ### 2. Search by username: `GET /policies/search`
 

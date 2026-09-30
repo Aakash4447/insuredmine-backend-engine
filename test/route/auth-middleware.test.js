@@ -85,10 +85,10 @@ describe('auth middleware role check on POST /policies/upload (ADMIN only)', () 
 
   const post = () => request(app).post('/policies/upload').set('Authorization', bearer('u1'));
 
-  it('returns 403 when the user role is not allowed', async () => {
+  it('returns 401 when the user role is not allowed', async () => {
     models.user.findOne.mockResolvedValue(fakeUser({ roles: ['USER'] }));
     const res = await post();
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(401);
     expect(res.body).toMatchObject({ success: false, message: 'You do not have permission to perform this action' });
   });
 
@@ -106,16 +106,16 @@ describe('auth middleware role check on POST /policies/upload (ADMIN only)', () 
     expect(res.status).not.toBe(401);
   });
 
-  it('returns 403 when the user only has the USER role in a roles array', async () => {
+  it('returns 401 when the user only has the USER role in a roles array', async () => {
     models.user.findOne.mockResolvedValue(fakeUser({ roles: ['USER'] }));
     const res = await post();
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(401);
   });
 
-  it('returns 403 when the user has no roles', async () => {
+  it('returns 401 when the user has no roles', async () => {
     models.user.findOne.mockResolvedValue(fakeUser({ roles: [] }));
     const res = await post();
-    expect(res.status).toBe(403);
+    expect(res.status).toBe(401);
   });
 
   it('still returns 401 before checking roles when the token is missing', async () => {
